@@ -1,4 +1,7 @@
 package org.jenkinsci.plugins.stashprbuilder;
+//import com.atlassian.stash.server.ApplicationPropertiesService;
+//import com.atlassian.stash.mail.MailHostConfiguration;
+//import com.atlassian.stash.repository.Repository;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.util.FormValidation;
@@ -12,8 +15,15 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.QueryParameter;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.ServletException;
+import java.io.File;
 import java.io.IOException;
+//import com.atlassian.stash.server.ApplicationPropertiesService;
+import java.net.URI;
+import java.util.Date;
+import java.util.TimeZone;
 
 // todo : Need clean up
 /**
@@ -25,13 +35,20 @@ public class MergePRTgtIntoSrc extends Builder {
 
     private final String rebasevalue;
     private final String pushvalue;
+
+    private String stashUser;
+    private String password;
+
   //  private String type;
 
     @DataBoundConstructor
-    public MergePRTgtIntoSrc(String rebasevalue, String pushvalue) { //boolean rebase, boolean push) {
+    public MergePRTgtIntoSrc(String rebasevalue, String pushvalue) {
         this.rebasevalue = rebasevalue;
         this.pushvalue = pushvalue;
     //    this.type = type;
+
+
+
 
     }
 
@@ -44,7 +61,8 @@ public class MergePRTgtIntoSrc extends Builder {
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
 
-      //      listener.getLogger().format("hello %b %b", rebase, push)    ;
+         listener.getLogger().format("hello %s %s %s ", rebasevalue, pushvalue, "DUMMY"); //this.returnuri.toString())    ;
+
         return true;
     }
 

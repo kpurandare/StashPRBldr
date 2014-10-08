@@ -8,12 +8,24 @@ import hudson.model.AbstractProject;
 import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
 import net.sf.json.JSONObject;
+import org.jenkinsci.plugins.StashPRBuilder.StashClientInterface;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.QueryParameter;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+import java.io.IOException;
+//import com.atlassian.stash.server.ApplicationPropertiesService;
+import java.net.URI;
+import java.util.Date;
+import java.util.TimeZone;
 
 
 // Todo : Need clean up
@@ -21,14 +33,18 @@ import java.io.IOException;
 /**
  * @author Kamal
  */
+
 public class ResolveStashPullRequest extends Builder {
 
 
     private final boolean mergedeny;
     private final boolean approvedecline;
     private final boolean ffonlymerge;
+ //   private URI uri;
+ //   private URI returnuri;
+ //   private AppPrService  stashappservice = new AppPrService();
 
-
+    private transient static final Logger LOGGER    = Logger.getLogger(ResolveStashPullRequest.class.getName());
 
     @DataBoundConstructor
     public ResolveStashPullRequest(boolean mergedeny, boolean approvedecline, boolean ffonlymerge) {
@@ -47,6 +63,21 @@ public class ResolveStashPullRequest extends Builder {
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
         // Dummy implementation
         listener.getLogger().format("hello %b %b %b", mergedeny, approvedecline, ffonlymerge);
+
+        try {
+
+            StashClientInterface sci = new StashClientInterface("http://localhost:7990", "kpurandare", "MyStash1234", LOGGER);
+         //   sci.getProperties();
+        //    sci.getProjects();
+            LOGGER.log(Level.SEVERE, "after create stash client call");
+        }
+        catch (Exception e)
+
+        {
+            LOGGER.log(Level.SEVERE, "Problem while creating stash client", e);
+
+        }
+
         return true;
     }
 
@@ -56,7 +87,11 @@ public class ResolveStashPullRequest extends Builder {
         return (DescriptorImpl)super.getDescriptor();
     }
 
+//    public static final class AppPrService implements ApplicationPropertiesService {
 
+
+
+  //  };
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
